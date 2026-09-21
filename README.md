@@ -17,7 +17,6 @@ Partially and fully persistent dynamic graphs in pure Python, built with the **f
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
 - [Menu Reference](#menu-reference)
-- [Version Queries (Option 9)](#version-queries-option-9)
 - [Example Session](#example-session)
 - [How It Works](#how-it-works)
 - [Space Efficiency](#space-efficiency)
@@ -67,8 +66,7 @@ Full:      v0 ── v1 ── v2 ── v4
 ## Features
 
 - **Dynamic graph operations**: `addVertex`, `addEdge`, `removeEdge`, `removeVertex`
-- **Versioned display**: `show_graph` (graph at any version) and `show_versions` (version history)
-- **Versioned queries** (menu option 9): `NeighboursAt`, `DegreeAt`, `EdgeAt`, and `ReachableAt` answer questions about the graph as it existed at any chosen version
+- **Versioned queries**: `show_graph` (graph at any version) and `show_versions` (version history)
 - **Space measurement**: compares fat-node entry counts against a naïve full-copy approach
 - **Menu-driven interface**: simple terminal interaction, no setup required
 - **Modify Version** *(full persistence only)*: rename or update metadata of any version
@@ -128,24 +126,8 @@ Both programs are menu-driven. Use the menu to:
 | Show versions | Lists all versions and their history |
 | Measure space | Compares fat-node entries with naïve-copy entries and prints the ratio |
 | Modify version | *(Full persistence only)* Rename or update metadata of any version |
-| **9. NeighboursAt / DegreeAt / EdgeAt / ReachableAt** | Query the graph as it existed at any chosen version (see below) |
 
 > Exact menu numbering and prompts may differ slightly between the two programs. Follow the on-screen instructions.
-
----
-
-## Version Queries (Option 9)
-
-Menu option **9** groups four read-only queries. Each one takes a **version** as input and answers using the graph exactly as it was at that version, regardless of later edits.
-
-| Query | Inputs | Returns |
-|-------|--------|---------|
-| `NeighboursAt` | vertex, version | The set of vertices adjacent to the given vertex at that version |
-| `DegreeAt` | vertex, version | The number of edges incident to the vertex at that version |
-| `EdgeAt` | vertex u, vertex v, version | Whether an edge between u and v existed at that version |
-| `ReachableAt` | source u, target v, version | Whether v can be reached from u by following edges at that version |
-
-These queries never create a new version, so they are safe to run on any version in both the partial and full persistence programs.
 
 ---
 
@@ -161,11 +143,6 @@ An illustrative flow (your exact prompts and output formatting may differ):
 5. Show graph at v3      -> A and B connected by an edge
 6. Show graph at v4      -> A and B present, no edge
 7. Measure space         -> fat-node entries vs. naïve-copy entries
-8. Option 9: EdgeAt A B @ v3        -> True
-9. Option 9: EdgeAt A B @ v4        -> False
-10. Option 9: NeighboursAt A @ v3   -> {B}
-11. Option 9: DegreeAt A @ v4       -> 0
-12. Option 9: ReachableAt A B @ v3  -> True
 ```
 
 Querying version 3 after version 4 has been created still returns the graph with the edge, which is the point of persistence.
@@ -200,11 +177,13 @@ Total fat-node space grows with the **number of updates**, while naïve copying 
 
 - **No DAG visualization**: versions are displayed as a list, not a drawn graph.
 - **Approximate space measurement**: counts stored entries, not actual memory bytes.
+- **Reachability queries**: `reachableAt` is not exposed in the menu, though it can be added.
 
 ---
 
 ## Future Work
 
+- Add `reachableAt(u, v, version)` to the menu
 - Render the version DAG (e.g., with Graphviz)
 - Measure real memory usage instead of entry counts
 - Add automated tests for version isolation and branching
