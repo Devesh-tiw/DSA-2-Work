@@ -173,13 +173,6 @@ Total fat-node space grows with the **number of updates**, while naïve copying 
 
 ---
 
-## Limitations
-
-- **No DAG visualization**: versions are displayed as a list, not a drawn graph.
-- **Approximate space measurement**: counts stored entries, not actual memory bytes.
-- **Reachability queries**: `reachableAt` is not exposed in the menu, though it can be added.
-
----
 
 ## Future Work
 
